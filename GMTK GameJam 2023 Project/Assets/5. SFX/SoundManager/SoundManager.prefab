@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundPlayerPrefab: {fileID: 2468099089851079993, guid: c12284d5e4b6e194eb039a256eddd324, type: 3}
+  musicMixer: {fileID: 2132691912590189706, guid: a53b58b3c8fbe5d4990b1bf078c439e4, type: 2}
+  sfxMixer: {fileID: -8735190662312880172, guid: a53b58b3c8fbe5d4990b1bf078c439e4, type: 2}
   sounds: []
-  currentlyPlaying: []
   masterVolume: 1

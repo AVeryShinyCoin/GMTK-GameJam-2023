@@ -10,6 +10,9 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
     [SerializeField] GameObject soundPlayerPrefab;
+
+    [SerializeField] AudioMixerGroup musicMixer;
+    [SerializeField] AudioMixerGroup sfxMixer;
     public Sound[] sounds;
 
     private bool delay;
@@ -44,6 +47,15 @@ public class SoundManager : MonoBehaviour
             s.source.loop = s.loop;
             s.source.volume = s.volume * masterVolume;
             s.source.pitch = s.pitch;
+
+            if (s.name.StartsWith("BGM"))
+            {
+                s.source.outputAudioMixerGroup = musicMixer;
+            }
+            else
+            {
+                s.source.outputAudioMixerGroup = sfxMixer;
+            }
         }
 
     }
@@ -227,9 +239,17 @@ public class SoundManager : MonoBehaviour
         gobSource.loop = s.loop;
         gobSource.volume = s.volume * volume * masterVolume;
         gobSource.pitch = s.pitch * UnityEngine.Random.Range(minPitch, maxPitch);
-        gobSource.Play();
 
-        s.source.Play();
+        if (s.name.StartsWith("BGM"))
+        {
+            gobSource.outputAudioMixerGroup = musicMixer;
+        }
+        else
+        {
+            gobSource.outputAudioMixerGroup = sfxMixer;
+        }
+
+        gobSource.Play();
 
         Destroy(gob, s.clip.length * gobSource.pitch);
     }

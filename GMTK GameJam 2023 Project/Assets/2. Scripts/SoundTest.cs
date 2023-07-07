@@ -9,7 +9,7 @@ public class SoundTest : MonoBehaviour
 
     void Awake()
     {
-        name = "music";
+        name = "BGMMusic";
         input = new InputActions();
     }
 
