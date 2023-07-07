@@ -47,5 +47,23 @@ MonoBehaviour:
   soundPlayerPrefab: {fileID: 2468099089851079993, guid: c12284d5e4b6e194eb039a256eddd324, type: 3}
   musicMixer: {fileID: 2132691912590189706, guid: a53b58b3c8fbe5d4990b1bf078c439e4, type: 2}
   sfxMixer: {fileID: -8735190662312880172, guid: a53b58b3c8fbe5d4990b1bf078c439e4, type: 2}
-  sounds: []
+  sounds:
+  - name: BGMMusic
+    clip: {fileID: 8300000, guid: 905eb8ef73d617647b056536aff49e6e, type: 3}
+    loop: 1
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: ButtonHover
+    clip: {fileID: 8300000, guid: 3a692b1e1389f5c4a991552d8ad13858, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1.4
+    source: {fileID: 0}
+  - name: ButtonClick
+    clip: {fileID: 8300000, guid: 3a692b1e1389f5c4a991552d8ad13858, type: 3}
+    loop: 0
+    volume: 1
+    pitch: 0.7
+    source: {fileID: 0}
   masterVolume: 1
