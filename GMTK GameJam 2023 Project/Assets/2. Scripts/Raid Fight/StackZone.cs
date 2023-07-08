@@ -8,12 +8,8 @@ public class StackZone : MonoBehaviour
     private Collider2D coll;
 
     [SerializeField] bool outerZone;
+    public bool OnFire;
 
-
-    public void MoveToZone()
-    {
-        
-    }
 
     private void Start()
     {
@@ -48,7 +44,12 @@ public class StackZone : MonoBehaviour
 
     public void SetOnFire()
     {
+        OnFire = true;
+    }
 
+    public void StopFire()
+    {
+        OnFire = false;
     }
 }
 

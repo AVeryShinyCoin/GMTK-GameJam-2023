@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Raider : MonoBehaviour
@@ -27,6 +25,8 @@ public class Raider : MonoBehaviour
     bool moving;
     Vector2 tarDestination;
 
+    [Space(20)]
+    public Dictionary<StackZone, int> ZoneCosts = new Dictionary<StackZone, int>();
 
     private void Awake()
     {
@@ -50,7 +50,7 @@ public class Raider : MonoBehaviour
 
     private void Start()
     {
-        GameController.Instance.allRaiders.Add(this);
+        GameController.Instance.AllRaiders.Add(this);
     }
 
     public void PerformAction()
@@ -103,7 +103,7 @@ public class Raider : MonoBehaviour
         {
             List<Raider> woundedRaiders = new List<Raider>();
             Raider tank = null;
-            foreach (Raider raider in GameController.Instance.allRaiders)
+            foreach (Raider raider in GameController.Instance.AllRaiders)
             {
                 if (raider.HitPoints < raider.MaxHitPoints)
                 {
@@ -122,6 +122,41 @@ public class Raider : MonoBehaviour
                 //List<Order> SortedList = objListOrder.OrderBy(o => o.OrderDate).ToList();
             }
         }
+    }
+
+    public void AddCostToZone(StackZone stackZone, int cost)
+    {
+        if (ZoneCosts.ContainsKey(stackZone))
+        {
+            ZoneCosts[stackZone] += cost;
+        }
+        else
+        {
+            ZoneCosts.Add(stackZone, cost);
+        }
+    }
+
+    public StackZone LowestCostStackZone()
+    {
+        StackZone preferedStackZone = CurrentStackZone;
+
+        int lowestCost = 0;
+        if (ZoneCosts.ContainsKey(CurrentStackZone))
+        {
+            lowestCost = ZoneCosts[CurrentStackZone];
+        }
+
+        foreach (KeyValuePair<StackZone, int> entry in ZoneCosts)
+        {
+            if (ZoneCosts[entry.Key] < lowestCost)
+            {
+                lowestCost = ZoneCosts[entry.Key];
+                preferedStackZone = entry.Key;
+            }
+
+        }
+
+        return preferedStackZone;
     }
 
 
@@ -161,7 +196,7 @@ public class Raider : MonoBehaviour
 
         if (HitPoints <= 0)
         {
-            GameController.Instance.killedRaiders.Add(this.gameObject);
+            GameController.Instance.KilledRaiders.Add(this.gameObject);
         }
     }
 

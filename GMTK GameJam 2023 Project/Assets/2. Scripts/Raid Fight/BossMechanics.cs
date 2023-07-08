@@ -15,6 +15,8 @@ public class BossMechanics : MonoBehaviour
     [Space(20)]
     public int BossHP;
     public int BossHPMax;
+    public int BossEnergy;
+    public int BossMaxEnergy;
 
     private void Awake()
     {
@@ -28,7 +30,15 @@ public class BossMechanics : MonoBehaviour
         }
 
         BossHP = BossHPMax;
+        BossEnergy = 0;
     }
+
+    public void ChangeBossEnergy(int amount)
+    {
+        BossEnergy += amount;
+        //update energy gfx
+    }
+
 
     public void BossTakeDamage(int damage)
     {
