@@ -14,9 +14,14 @@ public class GameController : MonoBehaviour
     [HideInInspector] public StackZone RightStackZone;
     [HideInInspector] public StackZone OuterStackZone;
 
-    public List<Raider> allRaiders = new List<Raider>();
+    public List<Raider> AllRaiders = new List<Raider>();
 
-    public List<GameObject> killedRaiders = new List<GameObject>();
+    public List<GameObject> KilledRaiders = new List<GameObject>();
+
+    [Space(20)]
+    public List<BasicCondition> BasicConditions = new List<BasicCondition>();
+    public List<EnergyCondition> EnergyConditions = new List<EnergyCondition>();
+    public List<HealthCondition> HealthConditions = new List<HealthCondition>();
 
     void Awake()
     {
@@ -46,39 +51,69 @@ public class GameController : MonoBehaviour
         input.Disable();
     }
 
+    void NewTurn()
+    {
+        BossMechanics.Instance.ChangeBossEnergy(10);
+
+        foreach (Raider raider in AllRaiders)
+        {
+            raider.ZoneCosts.Clear();
+            
+            foreach (StackZone stackZone in StackZones) // baseline 500 cost to all zones
+            {
+                raider.AddCostToZone(stackZone, 500);
+            }
+
+            foreach (BasicCondition condition in BasicConditions)
+            {
+                condition.ApplyConditionCosts(raider);
+            }
+            foreach (EnergyCondition condition in EnergyConditions)
+            {
+                condition.ApplyConditionCosts(raider);
+            }
+            foreach (HealthCondition condition in HealthConditions)
+            {
+                condition.ApplyConditionCosts(raider);
+            }
+
+            raider.MoveToNewStackZone(raider.LowestCostStackZone());
+        }
+    }
+
     void Update()
     {
         if (input.PlayerController.NUM1.WasPressedThisFrame())
         {
-            foreach (Raider raider in allRaiders)
+            foreach (Raider raider in AllRaiders)
             {
                 raider.MoveToNewStackZone(StackZones[0]);
             }
         }
         if (input.PlayerController.NUM2.WasPressedThisFrame())
         {
-            foreach (Raider raider in allRaiders)
+            foreach (Raider raider in AllRaiders)
             {
                 raider.MoveToNewStackZone(StackZones[1]);
             }
         }
         if (input.PlayerController.NUM3.WasPressedThisFrame())
         {
-            foreach (Raider raider in allRaiders)
+            foreach (Raider raider in AllRaiders)
             {
                 raider.MoveToNewStackZone(StackZones[2]);
             }
         }
         if (input.PlayerController.NUM4.WasPressedThisFrame())
         {
-            foreach (Raider raider in allRaiders)
+            foreach (Raider raider in AllRaiders)
             {
                 raider.MoveToNewStackZone(StackZones[3]);
             }
         }
         if (input.PlayerController.NUM5.WasPressedThisFrame())
         {
-            foreach (Raider raider in allRaiders)
+            foreach (Raider raider in AllRaiders)
             {
                 raider.MoveToNewStackZone(StackZones[4]);
             }
@@ -86,7 +121,7 @@ public class GameController : MonoBehaviour
 
         if (input.PlayerController.R.WasPressedThisFrame())
         {
-            foreach (Raider raider in allRaiders)
+            foreach (Raider raider in AllRaiders)
             {
                 raider.MoveToNewStackZone(StackZones[Random.Range(0, StackZones.Count)]);
             }
@@ -132,11 +167,20 @@ public class GameController : MonoBehaviour
 
         if (input.PlayerController.Space.WasPressedThisFrame())
         {
-            foreach (Raider raider in allRaiders)
+            foreach (Raider raider in AllRaiders)
             {
                 raider.PerformAction();
             }
         }
+
+        if (input.PlayerController.Enter.WasPressedThisFrame())
+        {
+            TextDisplay.Instance.CookTextBlocks();
+            Debug.Log("BASIC CONDITIONS " + BasicConditions.Count);
+            Debug.Log("ENERGY CONDITIONS " + EnergyConditions.Count);
+            Debug.Log("HEALTH CONDITIONS " + HealthConditions.Count);
+        }
+
     }
 
 
@@ -150,13 +194,13 @@ public class GameController : MonoBehaviour
 
     public void CullDeadRaidersFromAllStacks()
     {
-        foreach (GameObject raider in killedRaiders)
+        foreach (GameObject raider in KilledRaiders)
         {
             RemoveRaiderFromAllStacks(raider);
-            allRaiders.Remove(raider.GetComponent<Raider>());
+            AllRaiders.Remove(raider.GetComponent<Raider>());
             Destroy(raider);
         }
-        killedRaiders.Clear();
+        KilledRaiders.Clear();
     }
 
 }
