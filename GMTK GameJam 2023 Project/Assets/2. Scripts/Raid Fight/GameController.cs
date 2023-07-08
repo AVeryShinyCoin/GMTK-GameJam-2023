@@ -51,6 +51,11 @@ public class GameController : MonoBehaviour
         input.Disable();
     }
 
+    private void Start()
+    {
+        SoundManager.Instance.PlaySound("BGMMusic", 1f);
+    }
+
     void NewTurn()
     {
         BossMechanics.Instance.ChangeBossEnergy(10);
@@ -79,7 +84,7 @@ public class GameController : MonoBehaviour
                 condition.ApplyConditionCosts(raider);
             }
 
-            raider.Invoke("PerformAction", Random.Range(0f, 2f));
+            raider.Invoke("PerformAction", Random.Range(0f, 1.5f));
         }
     }
 

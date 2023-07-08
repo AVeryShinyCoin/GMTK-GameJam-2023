@@ -76,14 +76,18 @@ public class Raider : MonoBehaviour
         if (Role == 0)
         {
             BossMechanics.Instance.BossTakeDamage(TankDamageDealt);
+            PlayAbilitySound("HitMedium");
             // Add tank bool;
         }
         else if (Role == 1)
         {
             BossMechanics.Instance.BossTakeDamage(DDamageDealt);
+            PlayAbilitySound("HitLight");
         }
         else if (Role == 2)
         {
+            PlayAbilitySound("Heal");
+
             List<Raider> woundedRaiders = new List<Raider>();
             Raider tank = null;
             foreach (Raider raider in GameController.Instance.AllRaiders)
@@ -113,6 +117,7 @@ public class Raider : MonoBehaviour
                     }
                 }
                 mostDamaged.RestoreHealth(HealerHealthRestore);
+                
             }
         }
     }
@@ -203,6 +208,11 @@ public class Raider : MonoBehaviour
         float ratio = ((float)HitPoints / (float)MaxHitPoints);
         //GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio / 2, ratio, ratio, 1f);
 
+    }
+
+    void PlayAbilitySound(string sound)
+    {
+        SoundManager.Instance.PlayUniqueSound(sound, 1f, 0.8f, 1.1f);
     }
 
 }
