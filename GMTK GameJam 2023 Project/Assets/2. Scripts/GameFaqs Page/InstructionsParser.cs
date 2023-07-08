@@ -12,7 +12,6 @@ public class InstructionsParser : MonoBehaviour
 
         foreach (TextBlock textBlock in rawTextBlocks)        
         {
-            Debug.Log("SUCCESS!" + textBlock.DisplayText);
             if (textBlock.NewCondition == true && currConditionList.Count != 0)
             {
                 List<TextBlock> newList = new List<TextBlock>();
@@ -64,7 +63,7 @@ public class InstructionsParser : MonoBehaviour
                     Debug.LogError("EMPTY STACKZONES SENT TO BASIC CONDITION!");
                     continue;
                 }
-                BasicCondition newCondition = new BasicCondition(role, stackZones, -400);
+                BasicCondition newCondition = new BasicCondition(role, stackZones, -20);
                 GameController.Instance.BasicConditions.Add(newCondition);
             }
 

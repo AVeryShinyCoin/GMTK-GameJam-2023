@@ -18,6 +18,9 @@ public class BossMechanics : MonoBehaviour
     public int BossEnergy;
     public int BossMaxEnergy;
 
+    [Space(20)]
+    [SerializeField] BossGFX gfx;
+
     private void Awake()
     {
         if (Instance == null)
@@ -45,7 +48,7 @@ public class BossMechanics : MonoBehaviour
         BossHP -= damage;
 
         float ratio = ((float)BossHP / (float)BossHPMax);
-        GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio / 2, 0.2f * ratio, 0.2f * ratio, 1f);
+        //GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio / 2, 0.2f * ratio, 0.2f * ratio, 1f);
 
         if (BossHP <= 0)
         {

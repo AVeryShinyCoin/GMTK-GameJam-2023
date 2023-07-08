@@ -19,11 +19,13 @@ public class Raider : MonoBehaviour
     public int MaxHitPoints;
     public int HitPoints;
     public StackZone CurrentStackZone;
+    public StackZone LowestCostStackZone;
     public bool Stunned;
 
     [SerializeField] float speed;
-    bool moving;
-    Vector2 tarDestination;
+    [SerializeField] RaiderGFX gfx;
+    public bool moving;
+    public Vector2 tarDestination;
 
     [Space(20)]
     public Dictionary<StackZone, int> ZoneCosts = new Dictionary<StackZone, int>();
@@ -32,17 +34,15 @@ public class Raider : MonoBehaviour
     {
         if (Role == 0)
         {
-            MaxHitPoints = DDHitPoints;
-            transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "D";
-        } else if (Role == 1)
-        {
             MaxHitPoints = TankHitPoints;
-            transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "T";
+        } 
+        else if (Role == 1)
+        {
+            MaxHitPoints = DDHitPoints;
         }
         else if (Role == 2)
         {
             MaxHitPoints = HealerHitPoints;
-            transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "H";
         }
 
         HitPoints = MaxHitPoints;
@@ -62,42 +62,25 @@ public class Raider : MonoBehaviour
         }
 
         // condition to check if unit needs to move
-        if (Role == 0) 
+        UpdateLowestCostStackZone();
+
+        if (LowestCostStackZone != CurrentStackZone)
         {
-            if (CurrentStackZone != GameController.Instance.LeftStackZone &&
-                CurrentStackZone != GameController.Instance.RightStackZone &&
-                CurrentStackZone != GameController.Instance.BackStackZone )
-            {
-                MoveToNewStackZone(GameController.Instance.StackZones[Random.Range(1, 4)]);
-                return;
-            }
-        }
-        else if (Role == 1)
-        {
-            if (CurrentStackZone != GameController.Instance.FrontStackZone)
-            {
-                MoveToNewStackZone(GameController.Instance.FrontStackZone);
-                return;
-            }
-        }
-        else if (Role == 2)
-        {
-            if (CurrentStackZone != GameController.Instance.OuterStackZone)
-            {
-                MoveToNewStackZone(GameController.Instance.OuterStackZone);
-                return;
-            }
+            MoveToNewStackZone(LowestCostStackZone);
+            return;
         }
 
+
+        gfx.UseAbility();
 
         if (Role == 0)
         {
-            BossMechanics.Instance.BossTakeDamage(DDamageDealt);
-        } 
-        else if (Role == 1)
-        {
             BossMechanics.Instance.BossTakeDamage(TankDamageDealt);
             // Add tank bool;
+        }
+        else if (Role == 1)
+        {
+            BossMechanics.Instance.BossTakeDamage(DDamageDealt);
         }
         else if (Role == 2)
         {
@@ -118,8 +101,18 @@ public class Raider : MonoBehaviour
             }
             else if (woundedRaiders.Count > 0)
             {
-                woundedRaiders[Random.Range(0, woundedRaiders.Count)].RestoreHealth(HealerHealthRestore);
-                //List<Order> SortedList = objListOrder.OrderBy(o => o.OrderDate).ToList();
+                Raider mostDamaged = null;
+                int mostDamage = 0;
+                foreach (Raider raider in woundedRaiders)
+                {
+                    int hurt = raider.MaxHitPoints - raider.HitPoints;
+                    if (hurt > mostDamage)
+                    {
+                        mostDamage = hurt;
+                        mostDamaged = raider;
+                    }
+                }
+                mostDamaged.RestoreHealth(HealerHealthRestore);
             }
         }
     }
@@ -136,7 +129,7 @@ public class Raider : MonoBehaviour
         }
     }
 
-    public StackZone LowestCostStackZone()
+    private void UpdateLowestCostStackZone()
     {
         StackZone preferedStackZone = CurrentStackZone;
 
@@ -156,7 +149,7 @@ public class Raider : MonoBehaviour
 
         }
 
-        return preferedStackZone;
+        LowestCostStackZone = preferedStackZone;
     }
 
 
@@ -183,6 +176,7 @@ public class Raider : MonoBehaviour
             if (Vector2.Distance(transform.position, tarDestination) <= 0.1)
             {
                 moving = false;
+                gfx.ArrivedAtDestination();
             }
         }
     }
@@ -192,11 +186,12 @@ public class Raider : MonoBehaviour
         HitPoints -= damage;
 
         float ratio = ((float)HitPoints / (float)MaxHitPoints);
-        GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio/2, ratio, ratio, 1f);
+        //GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio/2, ratio, ratio, 1f);
 
         if (HitPoints <= 0)
         {
             GameController.Instance.KilledRaiders.Add(this.gameObject);
+            gfx.Die();
         }
     }
 
@@ -206,7 +201,7 @@ public class Raider : MonoBehaviour
         if (HitPoints > MaxHitPoints) HitPoints = MaxHitPoints;
 
         float ratio = ((float)HitPoints / (float)MaxHitPoints);
-        GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio / 2, ratio, ratio, 1f);
+        //GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio / 2, ratio, ratio, 1f);
 
     }
 

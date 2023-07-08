@@ -21,8 +21,9 @@ public class HealthCondition
     public void ApplyConditionCosts(Raider raider)
     {
         if (raider.Role != Role) return;
-        if (BossMechanics.Instance.BossHP > HealthTarget) return;
+        if (((float)((float)BossMechanics.Instance.BossHP / (float)BossMechanics.Instance.BossHPMax) * 100) > HealthTarget) return;
 
+        Debug.Log("Health cost added to " + raider.gameObject.name);
         foreach (StackZone stackZone in AffectedZones)
         {
             raider.AddCostToZone(stackZone, CostChange);

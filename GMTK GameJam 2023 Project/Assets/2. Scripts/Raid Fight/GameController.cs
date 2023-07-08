@@ -54,6 +54,8 @@ public class GameController : MonoBehaviour
     void NewTurn()
     {
         BossMechanics.Instance.ChangeBossEnergy(10);
+        Debug.Log("New turn! Energy: " + BossMechanics.Instance.BossEnergy +
+            " Health: " + (float)((float)BossMechanics.Instance.BossHP / (float)BossMechanics.Instance.BossHPMax) * 100);
 
         foreach (Raider raider in AllRaiders)
         {
@@ -77,48 +79,13 @@ public class GameController : MonoBehaviour
                 condition.ApplyConditionCosts(raider);
             }
 
-            raider.MoveToNewStackZone(raider.LowestCostStackZone());
+            raider.Invoke("PerformAction", Random.Range(0f, 2f));
         }
     }
 
     void Update()
     {
-        if (input.PlayerController.NUM1.WasPressedThisFrame())
-        {
-            foreach (Raider raider in AllRaiders)
-            {
-                raider.MoveToNewStackZone(StackZones[0]);
-            }
-        }
-        if (input.PlayerController.NUM2.WasPressedThisFrame())
-        {
-            foreach (Raider raider in AllRaiders)
-            {
-                raider.MoveToNewStackZone(StackZones[1]);
-            }
-        }
-        if (input.PlayerController.NUM3.WasPressedThisFrame())
-        {
-            foreach (Raider raider in AllRaiders)
-            {
-                raider.MoveToNewStackZone(StackZones[2]);
-            }
-        }
-        if (input.PlayerController.NUM4.WasPressedThisFrame())
-        {
-            foreach (Raider raider in AllRaiders)
-            {
-                raider.MoveToNewStackZone(StackZones[3]);
-            }
-        }
-        if (input.PlayerController.NUM5.WasPressedThisFrame())
-        {
-            foreach (Raider raider in AllRaiders)
-            {
-                raider.MoveToNewStackZone(StackZones[4]);
-            }
-        }
-
+        
         if (input.PlayerController.R.WasPressedThisFrame())
         {
             foreach (Raider raider in AllRaiders)
@@ -127,50 +94,9 @@ public class GameController : MonoBehaviour
             }
         }
 
-
-
-        if (input.PlayerController.Up.WasPressedThisFrame())
-        {
-            List<StackZone> damagedZones = new List<StackZone>() { StackZones[0] };
-            BossMechanics.Instance.DamageAllInZones(damagedZones, 2);
-        }
-
-        if (input.PlayerController.Down.WasPressedThisFrame())
-        {
-            List<StackZone> damagedZones = new List<StackZone>() { StackZones[1] };
-            BossMechanics.Instance.DamageAllInZones(damagedZones, 2);
-        }
-
-        if (input.PlayerController.Left.WasPressedThisFrame())
-        {
-            List<StackZone> damagedZones = new List<StackZone>() { StackZones[2] };
-            BossMechanics.Instance.DamageAllInZones(damagedZones, 2);
-        }
-
-        if (input.PlayerController.Right.WasPressedThisFrame())
-        {
-            List<StackZone> damagedZones = new List<StackZone>() { StackZones[3] };
-            BossMechanics.Instance.DamageAllInZones(damagedZones, 2);
-        }
-
-        if (input.PlayerController.Q.WasPressedThisFrame())
-        {
-            List<StackZone> damagedZones = new List<StackZone>() { StackZones[0], StackZones[2] };
-            BossMechanics.Instance.DamageAllInZones(damagedZones, 2);
-        }
-
-        if (input.PlayerController.E.WasPressedThisFrame())
-        {
-            List<StackZone> damagedZones = new List<StackZone>() { StackZones[0], StackZones[3] };
-            BossMechanics.Instance.DamageAllInZones(damagedZones, 2);
-        }
-
         if (input.PlayerController.Space.WasPressedThisFrame())
         {
-            foreach (Raider raider in AllRaiders)
-            {
-                raider.PerformAction();
-            }
+            NewTurn();
         }
 
         if (input.PlayerController.Enter.WasPressedThisFrame())

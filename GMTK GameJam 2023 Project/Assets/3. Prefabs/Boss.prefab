@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2016805457296747
+--- !u!1 &3944118038533010939
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,60 +8,54 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2016805457296750}
-  - component: {fileID: 2016805457296744}
+  - component: {fileID: 3944118038533010933}
+  - component: {fileID: 3944118038533010932}
   m_Layer: 0
-  m_Name: Raider
+  m_Name: Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2016805457296750
+--- !u!4 &3944118038533010933
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2016805457296747}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.86, y: -2.75, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_GameObject: {fileID: 3944118038533010939}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3484913891169550274}
+  - {fileID: 5547104462342021390}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2016805457296744
+--- !u!114 &3944118038533010932
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2016805457296747}
+  m_GameObject: {fileID: 3944118038533010939}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a9c6ea6c30ca0b4e88fc00c01a4ff44, type: 3}
+  m_Script: {fileID: 11500000, guid: 2dfdcb9792b6d8b4280d543f2a305dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Role: 0
-  DDHitPoints: 10
-  TankHitPoints: 25
-  HealerHitPoints: 8
-  DDamageDealt: 10
-  TankDamageDealt: 2
-  HealerHealthRestore: 10
-  MaxHitPoints: 0
-  HitPoints: 0
-  CurrentStackZone: {fileID: 0}
-  LowestCostStackZone: {fileID: 0}
-  Stunned: 0
-  speed: 2
-  gfx: {fileID: 9056921133575663117}
-  moving: 0
-  tarDestination: {x: 0, y: 0}
---- !u!1 &2474746065259813756
+  FrontStackZone: {fileID: 0}
+  BackStackZone: {fileID: 0}
+  LeftStackZone: {fileID: 0}
+  RightStackZone: {fileID: 0}
+  OuterStackZone: {fileID: 0}
+  BossHP: 0
+  BossHPMax: 1000
+  BossEnergy: 0
+  BossMaxEnergy: 0
+  gfx: {fileID: 3449043672134640064}
+--- !u!1 &8728218673195304036
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,39 +63,51 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3484913891169550274}
-  - component: {fileID: 1169058438777524216}
-  - component: {fileID: 9056921133575663117}
-  - component: {fileID: 1708854644357183248}
+  - component: {fileID: 5547104462342021390}
+  - component: {fileID: 3449043672134640064}
+  - component: {fileID: 7590522700875287087}
+  - component: {fileID: 1448858063384987883}
   m_Layer: 0
-  m_Name: RaiderGFX
+  m_Name: BossGFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3484913891169550274
+--- !u!4 &5547104462342021390
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2474746065259813756}
+  m_GameObject: {fileID: 8728218673195304036}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2016805457296750}
+  m_Father: {fileID: 3944118038533010933}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &1169058438777524216
+--- !u!114 &3449043672134640064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8728218673195304036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66e6e1eeebb74c44bb3d7da9e2ba0615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!212 &7590522700875287087
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2474746065259813756}
+  m_GameObject: {fileID: 8728218673195304036}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -133,52 +139,31 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -595598423
-  m_SortingLayer: 2
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: dcea51d6065d64246aeec467afeff684, type: 3}
+  m_Sprite: {fileID: -1029028364, guid: 32a203c0046976f43ac0356ad576e180, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.48, y: 0.48}
+  m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9056921133575663117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2474746065259813756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 398c0d953b437ca4589de66d0b61e603, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tankAnimators:
-  - {fileID: 9100000, guid: 2c92823b79d66b74fa5828b7aba202e9, type: 2}
-  - {fileID: 9100000, guid: 2541513dd45f37a4a9adb931b4a93b0e, type: 2}
-  ddAnimators:
-  - {fileID: 9100000, guid: 0fc485045e7236242a466e28fa5c1ef0, type: 2}
-  - {fileID: 9100000, guid: 592eab494b595b349a4cb15bcbcbf6ed, type: 2}
-  - {fileID: 9100000, guid: e9a184c7c7e49a044accf3b1cfb32f4e, type: 2}
-  healerAnimators:
-  - {fileID: 9100000, guid: 735bee8cbce16c346a252bd32c34abac, type: 2}
---- !u!95 &1708854644357183248
+--- !u!95 &1448858063384987883
 Animator:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2474746065259813756}
+  m_GameObject: {fileID: 8728218673195304036}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: eee9ccb311269a04880276f518ee5cd1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
