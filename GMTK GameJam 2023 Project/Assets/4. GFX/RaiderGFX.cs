@@ -55,6 +55,9 @@ public class RaiderGFX : MonoBehaviour
                 sr.flipX = false;
             }
         }
+
+        float ratio = ((float)parentScript.HitPoints / (float)parentScript.MaxHitPoints);
+        GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio/2, ratio, ratio, 1f);
     }
 
     public void ArrivedAtDestination()

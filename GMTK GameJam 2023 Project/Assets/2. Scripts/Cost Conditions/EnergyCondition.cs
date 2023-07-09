@@ -24,8 +24,6 @@ public class EnergyCondition
         {
             if (BossMechanics.Instance.BossEnergy != EnergyTargets[i]) continue;
 
-            Debug.Log("Appling energy cost for " + EnergyTargets[i] + " energy!");
-
             // role -1 applies to everyone, but only at half effect
             if (Role == -1)
             {

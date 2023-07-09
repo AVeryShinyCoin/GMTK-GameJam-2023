@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Raider : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class Raider : MonoBehaviour
     [SerializeField] RaiderGFX gfx;
     public bool moving;
     public Vector2 tarDestination;
+    [SerializeField] GameObject fxHealPrefab;
 
     [Space(20)]
     public Dictionary<StackZone, int> ZoneCosts = new Dictionary<StackZone, int>();
@@ -89,14 +91,32 @@ public class Raider : MonoBehaviour
             PlayAbilitySound("Heal");
 
             List<Raider> woundedRaiders = new List<Raider>();
+            List<Raider> woundedTanks = new List<Raider>();
             Raider tank = null;
             foreach (Raider raider in GameController.Instance.AllRaiders)
             {
                 if (raider.HitPoints < raider.MaxHitPoints)
                 {
                     woundedRaiders.Add(raider);
-                    if (raider.Role == 1) tank = raider;
+                    if (raider.Role == 1) woundedTanks.Add(raider);
                 }
+            }
+
+            if (woundedTanks.Count > 0)
+            {
+                Raider mostDamTank = null;
+                int mostDamTankValue = 0;
+                foreach (Raider raider in woundedTanks)
+                {
+                    int hurt = raider.MaxHitPoints - raider.HitPoints;
+                    if (hurt > mostDamTankValue)
+                    {
+                        mostDamTankValue = hurt;
+                        mostDamTank = raider;
+                    }
+                }
+
+                tank = mostDamTank;
             }
 
             if (tank != null)
@@ -134,26 +154,46 @@ public class Raider : MonoBehaviour
         }
     }
 
-    private void UpdateLowestCostStackZone()
+    public void UpdateLowestCostStackZone()
     {
-        StackZone preferedStackZone = CurrentStackZone;
-
-        int lowestCost = 0;
-        if (ZoneCosts.ContainsKey(CurrentStackZone))
+        StackZone preferedStackZone = null;
+        int lowestCost = 100000;
+        if (CurrentStackZone != null)
         {
-            lowestCost = ZoneCosts[CurrentStackZone];
+            preferedStackZone = CurrentStackZone;
+            if (ZoneCosts.ContainsKey(CurrentStackZone))
+            {
+                lowestCost = ZoneCosts[CurrentStackZone];
+            }
+
         }
+
+        List<StackZone> lowestCosts = new List<StackZone>();
 
         foreach (KeyValuePair<StackZone, int> entry in ZoneCosts)
         {
+
+            if (ZoneCosts[entry.Key] == lowestCost)
+            {
+                lowestCosts.Add(entry.Key);
+            }
             if (ZoneCosts[entry.Key] < lowestCost)
             {
                 lowestCost = ZoneCosts[entry.Key];
-                preferedStackZone = entry.Key;
+                lowestCosts.Clear();
+                lowestCosts.Add(entry.Key);
             }
         }
 
-        LowestCostStackZone = preferedStackZone;
+        if (!lowestCosts.Contains(CurrentStackZone))
+        {
+            LowestCostStackZone = lowestCosts[Random.Range(0, lowestCosts.Count)];
+        }
+        else
+        {
+            LowestCostStackZone = CurrentStackZone;
+        }
+        
     }
 
 
@@ -187,26 +227,25 @@ public class Raider : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (Role == 0)
+        {
+            damage /= 2;
+        }
+
         HitPoints -= damage;
-
-        float ratio = ((float)HitPoints / (float)MaxHitPoints);
-        //GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio/2, ratio, ratio, 1f);
-
         if (HitPoints <= 0)
         {
             GameController.Instance.KilledRaiders.Add(this.gameObject);
             gfx.Die();
+            if (moving) moving = false;
         }
     }
 
     public void RestoreHealth(int amount)
     {
+        Instantiate(fxHealPrefab, transform.position, Quaternion.identity);
         HitPoints += amount;
         if (HitPoints > MaxHitPoints) HitPoints = MaxHitPoints;
-
-        float ratio = ((float)HitPoints / (float)MaxHitPoints);
-        //GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio / 2, ratio, ratio, 1f);
-
     }
 
     void PlayAbilitySound(string sound)

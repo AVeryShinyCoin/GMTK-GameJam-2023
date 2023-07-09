@@ -55,6 +55,36 @@ public class GameController : MonoBehaviour
     {
         //SoundManager.Instance.PlaySound("BGMMusic", 1f);
     }
+    
+    void StartRaid()
+    {
+        TextDisplay.Instance.CookTextBlocks();
+        foreach (Raider raider in AllRaiders)
+        {
+            raider.CurrentStackZone = null;
+            raider.ZoneCosts.Clear();
+
+            foreach (StackZone stackZone in StackZones) // baseline 500 cost to all zones
+            {
+                raider.AddCostToZone(stackZone, 500);
+            }
+            foreach (BasicCondition condition in BasicConditions)
+            {
+                condition.ApplyConditionCosts(raider);
+            }
+            foreach (EnergyCondition condition in EnergyConditions)
+            {
+                condition.ApplyConditionCosts(raider);
+            }
+            foreach (HealthCondition condition in HealthConditions)
+            {
+                condition.ApplyConditionCosts(raider);
+            }
+
+            raider.UpdateLowestCostStackZone();
+            raider.MoveToNewStackZone(raider.LowestCostStackZone);
+        }
+    }
 
     void NewTurn()
     {
@@ -86,6 +116,8 @@ public class GameController : MonoBehaviour
 
             raider.Invoke("PerformAction", Random.Range(0f, 1.5f));
         }
+
+        BossMechanics.Instance.Invoke("PerformBossAction", 2.5f);
     }
 
     void Update()
@@ -106,10 +138,7 @@ public class GameController : MonoBehaviour
 
         if (input.PlayerController.Enter.WasPressedThisFrame())
         {
-            TextDisplay.Instance.CookTextBlocks();
-            Debug.Log("BASIC CONDITIONS " + BasicConditions.Count);
-            Debug.Log("ENERGY CONDITIONS " + EnergyConditions.Count);
-            Debug.Log("HEALTH CONDITIONS " + HealthConditions.Count);
+            StartRaid();
         }
 
     }
@@ -127,11 +156,12 @@ public class GameController : MonoBehaviour
     {
         foreach (GameObject raider in KilledRaiders)
         {
-            RemoveRaiderFromAllStacks(raider);
-            AllRaiders.Remove(raider.GetComponent<Raider>());
-            Destroy(raider);
+            if (AllRaiders.Contains(raider.GetComponent<Raider>()))
+            {
+                RemoveRaiderFromAllStacks(raider);
+                AllRaiders.Remove(raider.GetComponent<Raider>());
+            } 
         }
-        KilledRaiders.Clear();
     }
 
 }

@@ -77,7 +77,6 @@ public class InstructionsParser : MonoBehaviour
                 BasicCondition newCondition = new BasicCondition(role, stackZones, cost * negMod);
                 GameController.Instance.BasicConditions.Add(newCondition);
 
-                Debug.Log("Added " + negMod * cost + " basic condition to role " + role);
             }
 
             else if (type == 1)     // Energy Condition
@@ -99,10 +98,6 @@ public class InstructionsParser : MonoBehaviour
                 EnergyCondition newCondition = new EnergyCondition(role, stackZones, 1000 * negMod, values);
                 GameController.Instance.EnergyConditions.Add(newCondition);
 
-                for (int i = 0; i < values.Length; i++)
-                {
-                    Debug.Log("Added " + negMod + " energy condition to role " + role + " at energy " + values[i]);
-                }
             }
 
             else if (type == 2)     // Health Condition
@@ -123,8 +118,6 @@ public class InstructionsParser : MonoBehaviour
 
                 HealthCondition newCondition = new HealthCondition(role, stackZones, 1000 * negMod, values);
                 GameController.Instance.HealthConditions.Add(newCondition);
-
-                Debug.Log("Added " + negMod + " health condition to role " + role);
             }
         }
     }
@@ -161,7 +154,6 @@ public class InstructionsParser : MonoBehaviour
             if (textBlock.dataType == TextBlock.DataType.Zones)
             {
                 stackZones = textBlock.DataZones;
-                Debug.Log(textBlock.DisplayText);
             }
         }
         return stackZones;
