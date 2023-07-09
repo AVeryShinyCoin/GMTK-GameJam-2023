@@ -26,6 +26,7 @@ public class GameController : MonoBehaviour
     public bool Tutorial = true;
     [SerializeField] GameObject middleFrame;
     [SerializeField] GameObject raidProgessText;
+    [SerializeField] GameObject bossFrame;
 
     void Awake()
     {
@@ -67,6 +68,7 @@ public class GameController : MonoBehaviour
             BossMechanics.Instance.BossHP = 300;
         }
 
+        bossFrame.SetActive(true);
         Tutorial = false;
         raidProgessText.SetActive(true);
         TextDisplay.Instance.CookTextBlocks();
@@ -194,6 +196,7 @@ public class GameController : MonoBehaviour
         ResetWorld();
         middleFrame.SetActive(true);
         middleFrame.GetComponent<UICenterFrameController>().ShowDefeatScreen();
+        CameraManager.Instance.PanToDeskScreen();
     }
 
     public void RaidWiped()
@@ -211,6 +214,7 @@ public class GameController : MonoBehaviour
         ResetWorld();
         middleFrame.SetActive(true);
         middleFrame.GetComponent<UICenterFrameController>().ShowVictoryScreen();
+        CameraManager.Instance.PanToDeskScreen();
     }
 
 
@@ -218,6 +222,7 @@ public class GameController : MonoBehaviour
     void ResetWorld()
     {
         raidProgessText.SetActive(false);
+        bossFrame.SetActive(false);
 
         foreach (Raider raider in AllRaiders)
         {

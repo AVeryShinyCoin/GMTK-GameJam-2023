@@ -97,7 +97,7 @@ MonoBehaviour:
     pitch: 1
     source: {fileID: 0}
   - name: Roar
-    clip: {fileID: 8300000, guid: 7243cfc5a2218274488a9ce57d7d95a7, type: 3}
+    clip: {fileID: 8300000, guid: 08509d9e7e2d1364488d0e6eb2d3463c, type: 3}
     loop: 0
     volume: 0.8
     pitch: 1

@@ -51,7 +51,7 @@ MonoBehaviour:
   HealerHitPoints: 8
   DDamageDealt: 12
   TankDamageDealt: 2
-  HealerHealthRestore: 10
+  HealerHealthRestore: 6
   MaxHitPoints: 0
   HitPoints: 0
   CurrentStackZone: {fileID: 0}

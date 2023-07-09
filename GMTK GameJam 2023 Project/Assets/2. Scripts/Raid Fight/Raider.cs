@@ -250,8 +250,9 @@ public class Raider : MonoBehaviour
         if (HitPoints <= 0)
         {
             GameController.Instance.KilledRaiders.Add(this.gameObject);
-            gfx.Die();
+            GameController.Instance.AllRaiders.Remove(this);
             if (moving) moving = false;
+            gfx.Die();
             GameController.Instance.RaidWiped();
         }
     }
