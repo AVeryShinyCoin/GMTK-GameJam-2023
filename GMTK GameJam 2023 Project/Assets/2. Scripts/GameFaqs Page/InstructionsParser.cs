@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,7 +20,6 @@ public class InstructionsParser : MonoBehaviour
                 {
                     newList.Add(_textBlock);
                 }
-                Debug.Log(newList.Count);
                 rawConditions.Add(newList);
                 currConditionList.Clear();
             }
@@ -34,7 +34,6 @@ public class InstructionsParser : MonoBehaviour
         {
             _newList.Add(_textBlock);
         }
-        Debug.Log(_newList.Count);
         rawConditions.Add(_newList);
         currConditionList.Clear();
 
@@ -54,6 +53,7 @@ public class InstructionsParser : MonoBehaviour
 
             int role = list[0].InstructionBelongsToRole;
             int type = FindTypeOfCondition(list);
+            int negMod = (ContainsNegativeModifier(list));
 
             if (type == 0)          // Basic Condition
             {
@@ -63,8 +63,21 @@ public class InstructionsParser : MonoBehaviour
                     Debug.LogError("EMPTY STACKZONES SENT TO BASIC CONDITION!");
                     continue;
                 }
-                BasicCondition newCondition = new BasicCondition(role, stackZones, -20);
+
+                int cost;
+                if (role == 0)
+                {
+                    cost = 2000;
+                }
+                else
+                {
+                    cost = 20;
+                }
+
+                BasicCondition newCondition = new BasicCondition(role, stackZones, cost * negMod);
                 GameController.Instance.BasicConditions.Add(newCondition);
+
+                Debug.Log("Added " + negMod * cost + " basic condition to role " + role);
             }
 
             else if (type == 1)     // Energy Condition
@@ -76,15 +89,20 @@ public class InstructionsParser : MonoBehaviour
                     continue;
                 }
 
-                int value = FindDataValueOfType(list, TextBlock.DataType.BossEnergy);
-                if (value == -1)
+                int[] values = FindPercentageValues(list);
+                if (values.Length == 0)
                 {
-                    Debug.LogError("EMPTY VALUE SENT TO ENERGY CONDITION!");
+                    Debug.LogError("EMPTY VALUES SENT TO ENERGY CONDITION!");
                     continue;
                 }
 
-                EnergyCondition newCondition = new EnergyCondition(role, stackZones, 1000, value);
+                EnergyCondition newCondition = new EnergyCondition(role, stackZones, 1000 * negMod, values);
                 GameController.Instance.EnergyConditions.Add(newCondition);
+
+                for (int i = 0; i < values.Length; i++)
+                {
+                    Debug.Log("Added " + negMod + " energy condition to role " + role + " at energy " + values[i]);
+                }
             }
 
             else if (type == 2)     // Health Condition
@@ -96,17 +114,31 @@ public class InstructionsParser : MonoBehaviour
                     continue;
                 }
 
-                int value = FindDataValueOfType(list, TextBlock.DataType.BossHealth);
-                if (value == -1)
+                int[] values = FindPercentageValues(list);
+                if (values.Length == 0)
                 {
-                    Debug.LogError("EMPTY VALUE SENT TO ENERGY CONDITION!");
+                    Debug.LogError("EMPTY VALUES SENT TO ENERGY CONDITION!");
                     continue;
                 }
 
-                HealthCondition newCondition = new HealthCondition(role, stackZones, 1000, value);
+                HealthCondition newCondition = new HealthCondition(role, stackZones, 1000 * negMod, values);
                 GameController.Instance.HealthConditions.Add(newCondition);
+
+                Debug.Log("Added " + negMod + " health condition to role " + role);
             }
         }
+    }
+
+    bool CheckIfSkip(List<TextBlock> list)
+    {
+        foreach (TextBlock textBlock in list)
+        {
+            if (textBlock.dataType == TextBlock.DataType.SkipCondition)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     int FindTypeOfCondition(List<TextBlock> list)
@@ -129,10 +161,39 @@ public class InstructionsParser : MonoBehaviour
             if (textBlock.dataType == TextBlock.DataType.Zones)
             {
                 stackZones = textBlock.DataZones;
+                Debug.Log(textBlock.DisplayText);
             }
         }
         return stackZones;
     }
+
+
+    int[] FindPercentageValues(List<TextBlock> list)
+    {
+        List<int> valuesList = new List<int>();
+        foreach (TextBlock textBlock in list)
+        {
+            if (textBlock.dataType == TextBlock.DataType.Percent)
+            {
+                valuesList.Add(textBlock.DataValue);
+            }
+        }
+
+        return (valuesList.ToArray());
+    }
+
+    int ContainsNegativeModifier(List<TextBlock> list)
+    {
+        foreach (TextBlock textBlock in list)
+        {
+            if (textBlock.dataType == TextBlock.DataType.NegativeModifier)
+            {
+                return -1;
+            }
+        }
+        return 1;
+    }
+
 
     int FindDataValueOfType(List<TextBlock> list, TextBlock.DataType type)
     {

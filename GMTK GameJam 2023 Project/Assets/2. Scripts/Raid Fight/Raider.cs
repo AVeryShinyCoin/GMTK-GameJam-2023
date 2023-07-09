@@ -151,7 +151,6 @@ public class Raider : MonoBehaviour
                 lowestCost = ZoneCosts[entry.Key];
                 preferedStackZone = entry.Key;
             }
-
         }
 
         LowestCostStackZone = preferedStackZone;

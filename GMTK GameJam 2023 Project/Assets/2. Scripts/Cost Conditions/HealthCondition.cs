@@ -8,25 +8,37 @@ public class HealthCondition
     int Role;
     public List<StackZone> AffectedZones = new List<StackZone>();
     public int CostChange;
-    public int HealthTarget;
+    public int[] HealthTargets;
 
-    public HealthCondition(int role, List<StackZone> affectedZones, int costChange, int healthTarget)
+    public HealthCondition(int role, List<StackZone> affectedZones, int costChange, int[] healthTargets)
     {
         Role = role;
         AffectedZones = affectedZones;
-        CostChange = costChange;
-        HealthTarget = healthTarget;
+        CostChange = -costChange;
+        HealthTargets = healthTargets;
     }
 
     public void ApplyConditionCosts(Raider raider)
     {
-        if (raider.Role != Role) return;
-        if (((float)((float)BossMechanics.Instance.BossHP / (float)BossMechanics.Instance.BossHPMax) * 100) > HealthTarget) return;
-
-        Debug.Log("Health cost added to " + raider.gameObject.name);
-        foreach (StackZone stackZone in AffectedZones)
+        for (int i = 0; i < HealthTargets.Length; i++)
         {
-            raider.AddCostToZone(stackZone, CostChange);
+            if (((float)((float)BossMechanics.Instance.BossHP / (float)BossMechanics.Instance.BossHPMax) * 100) > HealthTargets[i]) return;
+
+            // role -1 applies to everyone, but only at half effect
+            if (Role == -1)
+            {
+                foreach (StackZone stackZone in AffectedZones)
+                {
+                    raider.AddCostToZone(stackZone, CostChange / 2);
+                }
+                return;
+            }
+
+            if (raider.Role != Role) return;
+            foreach (StackZone stackZone in AffectedZones)
+            {
+                raider.AddCostToZone(stackZone, CostChange);
+            }
         }
     }
 }

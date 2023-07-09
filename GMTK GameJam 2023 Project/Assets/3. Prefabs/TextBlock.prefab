@@ -94,8 +94,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.4
-  m_fontSizeBase: 0.4
+  m_fontSize: 0.25
+  m_fontSizeBase: 0.25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -202,8 +202,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Interactable: 0
   LineBreak: 0
+  NewCondition: 0
   DisplayText: 
   Width: 0
   Index: 0
+  InstructionBelongsToRole: 0
   textUI: {fileID: 3436167236387879356}
-  spaceBarWidth: 0.24
+  spaceBarWidth: 0.15
+  dataType: 0
+  DataValue: 0
+  DataZones: []

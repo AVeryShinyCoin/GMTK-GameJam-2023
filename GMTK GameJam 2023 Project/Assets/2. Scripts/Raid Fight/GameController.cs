@@ -53,7 +53,7 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        SoundManager.Instance.PlaySound("BGMMusic", 1f);
+        //SoundManager.Instance.PlaySound("BGMMusic", 1f);
     }
 
     void NewTurn()

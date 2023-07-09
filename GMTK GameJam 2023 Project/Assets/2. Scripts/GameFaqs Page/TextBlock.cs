@@ -11,13 +11,13 @@ public class TextBlock : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public bool NewCondition;
     public string DisplayText;
     public float Width;
-    public int Index;
     public int InstructionBelongsToRole;
+    public bool Swappable;
     [SerializeField] TextMeshProUGUI textUI;
     [SerializeField] float spaceBarWidth;
 
     public DataType dataType = new DataType();
-    public enum DataType { None, Zones, Target, BossEnergy, BossHealth, DirectionFromTarget, Action};
+    public enum DataType { None, Zones, Target, BossEnergy, BossHealth, DirectionFromTarget, Action, Percent, NegativeModifier, SkipCondition};
     public int DataValue;
     public List<StackZone> DataZones;
 
@@ -28,12 +28,13 @@ public class TextBlock : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         fontSize = textUI.fontSize;
         dataType = DataType.None;
-        InstructionBelongsToRole = TextDisplay.Instance.CurrentRoleInstructions;
+        InstructionBelongsToRole = TextDisplay.Instance.CurrentRoleInstructions - 1;
     }
 
     public void InitializeBlock(string text)
     {
         DisplayText = text;
+
 
         if (text == "LINEBREAK")
         {
@@ -47,31 +48,10 @@ public class TextBlock : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             NewCondition = true;
         }
 
-        if (text.StartsWith("H@"))
-        {
-            DisplayText = DisplayText.Substring(2);
-            textUI.fontSize = textUI.fontSize * 1.2f;
-            TextDisplay.Instance.CurrentRoleInstructions++;
-        }
-
-        if (text.Contains("damagedealer"))
-        {
-            textUI.color = new Color(0.4f, 0.1f, 0.1f, 1f);
-        }
-        if (text.Contains("tank"))
-        {
-            textUI.color = new Color(0.1f, 0.1f, 0.4f, 1f);
-        }
-        if (text.Contains("healer"))
-        {
-            textUI.color = new Color(0.1f, 0.4f, 0.1f, 1f);
-        }
-
-
         if (text.StartsWith("ZON@"))
         {
-            if (text.Contains("@@")) MakeInteractable();
             dataType = DataType.Zones;
+            MakeInteractable();
 
             if (text.Contains("near"))
             {
@@ -126,10 +106,85 @@ public class TextBlock : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             }
         }
 
+        if (text.StartsWith("PER@"))
+        {
+            dataType = DataType.Percent;
+            MakeInteractable();
+
+            if (text.Length == 7)
+            {
+                DataValue = 100;
+            }
+            else
+            {
+                DataValue = int.Parse(text.Substring(4, 2));
+            }
+
+            DisplayText = DataValue + "%";
+        }
+
+
+        if (text.StartsWith("NRG@"))
+        {
+            dataType = DataType.BossEnergy;
+            MakeInteractable();
+            DisplayText = "boss energy";
+        }
+
+        if (text.StartsWith("HPS@"))
+        {
+            dataType = DataType.BossHealth;
+            MakeInteractable();
+            DisplayText = "boss health";
+        }
+
+        if (text.StartsWith("NEG@"))
+        {
+            dataType = DataType.NegativeModifier;
+            MakeInteractable();
+            DisplayText = text.Substring(4, text.Length - 4);
+        }
+
+        if (text.StartsWith("SKP@"))
+        {
+            dataType = DataType.SkipCondition;
+            DisplayText = ("");
+        }
+
+
+        if (text.StartsWith("DFT@"))
+        {
+            dataType = DataType.DirectionFromTarget;
+            MakeInteractable();
+            
+            if (text.Contains("stack"))
+            {
+                DataValue = 0;
+                DisplayText = "stack on";
+            }
+            if (text.Contains("away"))
+            {
+                DataValue = 1;
+                DisplayText = "move away from";
+            }
+        }
+
+        if (text.StartsWith("ACT@"))
+        {
+            dataType = DataType.Action;
+            MakeInteractable();
+            
+            if (text.Contains("heal"))
+            {
+                DataValue = 0;
+                DisplayText = "heal";
+            }
+        }
+
         if (text.StartsWith("TAR@"))
         {
-            if (text.Contains("@@")) MakeInteractable();
             dataType = DataType.Target;
+            MakeInteractable();
 
             if (text.Contains("dd"))
             {
@@ -161,81 +216,15 @@ public class TextBlock : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             }
         }
 
-        if (text.StartsWith("NRG@"))
-        {
-            int parseOffset = 0;
-            if (text.Contains("@@"))
-            {
-                MakeInteractable();
-                parseOffset = 1;
-            }
-
-            if (text.Length == 7 + parseOffset)
-            {
-                DataValue = 100;
-            }
-            else
-            {
-                DataValue = int.Parse(text.Substring(4 + parseOffset, 2));
-            }
-
-            dataType = DataType.BossEnergy;
-            DisplayText = DataValue + "% boss energy";
-        }
-
-        if (text.StartsWith("HPS@"))
-        {
-            int parseOffset = 0;
-            if (text.Contains("@@"))
-            {
-                MakeInteractable();
-                parseOffset = 1;
-            }
-                
-            if (text.Length == 7 + parseOffset)
-            {
-                DataValue = 100;
-            }
-            else
-            {
-                DataValue = int.Parse(text.Substring(4 + parseOffset, 2));
-            }
-
-            dataType = DataType.BossHealth;
-            DisplayText = DataValue + "% boss health";
-        }
-
-        if (text.StartsWith("DFT@"))
-        {
-            if (text.Contains("@@")) MakeInteractable();
-            dataType = DataType.DirectionFromTarget;
-            if (text.Contains("stack"))
-            {
-                DataValue = 0;
-                DisplayText = "stack on";
-            }
-            if (text.Contains("away"))
-            {
-                DataValue = 1;
-                DisplayText = "move away from";
-            }
-        }
-
-        if (text.StartsWith("ACT@"))
-        {
-            if (text.Contains("@@")) MakeInteractable();
-            dataType = DataType.Action;
-            if (text.Contains("heal"))
-            {
-                DataValue = 0;
-                DisplayText = "heal";
-            }
-        }
-
         textUI.text = DisplayText;
         textUI.gameObject.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
-        Width = textUI.gameObject.GetComponent<RectTransform>().sizeDelta.x + spaceBarWidth;
-        InstructionBelongsToRole = TextDisplay.Instance.CurrentRoleInstructions;
+        if (dataType == DataType.SkipCondition)
+        {
+            Width = 0;
+        } else
+        {
+            Width = textUI.gameObject.GetComponent<RectTransform>().sizeDelta.x + spaceBarWidth;
+        };
 
         if (Interactable)
         {
@@ -245,9 +234,21 @@ public class TextBlock : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     void MakeInteractable()
     {
-        Interactable = true;
-        textUI.fontStyle = FontStyles.Underline;
-        textUI.color = new Color(0.6f, 0.0f, 0.6f, 1f);
+        bool check = false;
+        foreach (TextBlock reference in TextDisplay.Instance.ReferenceSwappableTextBlocks)
+        {
+            if (reference.dataType == dataType)
+            {
+                check = true;
+            }
+        }
+
+        if (check)
+        {
+            Interactable = true;
+            textUI.fontStyle = FontStyles.Underline;
+            textUI.color = new Color(0.0f, 0.0f, 0.6f, 1f);
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -265,6 +266,13 @@ public class TextBlock : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         textUI.fontSize = fontSize * 1f;
     }
 
+    public void MakeSwapped()
+    {
+        textUI.fontSize = fontSize * 1f;
+        Interactable = false;
+        textUI.color = new Color(0.6f, 0.0f, 0.6f, 1f);
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         if (!Interactable) return;
@@ -278,6 +286,14 @@ public class TextBlock : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (hoverOver)
         {
             textUI.fontSize = fontSize * 1.10f;
+            if (!Swappable)
+            {
+                TextDisplay.Instance.ClickOnTextInGuide(this);
+            }
+            else
+            {
+                TextDisplay.Instance.ClickOnSwappable(this);
+            }
         }
         else
         {

@@ -39,6 +39,10 @@ public class BossMechanics : MonoBehaviour
     public void ChangeBossEnergy(int amount)
     {
         BossEnergy += amount;
+        if (BossEnergy > 100)
+        {
+            BossEnergy = 0;
+        }
         //update energy gfx
     }
 

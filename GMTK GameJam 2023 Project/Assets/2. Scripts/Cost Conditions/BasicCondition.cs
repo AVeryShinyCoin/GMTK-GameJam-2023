@@ -13,13 +13,22 @@ public class BasicCondition
     {
         Role = role;
         PreferedZones = preferedZones;
-        CostChange = costChange;
+        CostChange = -costChange;
     }
 
     public void ApplyConditionCosts(Raider raider)
     {
-        if (raider.Role != Role) return;
+        // role -1 applies to everyone, but only at half effect
+        if (Role == -1)
+        {
+            foreach (StackZone stackZone in PreferedZones)
+            {
+                raider.AddCostToZone(stackZone, CostChange / 2);
+            }
+            return;
+        }
 
+        if (raider.Role != Role) return;
         foreach (StackZone stackZone in PreferedZones)
         {
             raider.AddCostToZone(stackZone, CostChange);
