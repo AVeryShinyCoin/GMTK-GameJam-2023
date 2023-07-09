@@ -18,6 +18,7 @@ public class BossMechanics : MonoBehaviour
     public int BossHPMax;
     public int BossEnergy;
     public int BossMaxEnergy;
+    public bool Ready;
 
     [Space(20)]
     [SerializeField] BossGFX gfx;
@@ -28,6 +29,7 @@ public class BossMechanics : MonoBehaviour
     [SerializeField] LargeEffect fxFirebreath;
     [SerializeField] LargeEffect fxBreathExplode;
     [SerializeField] GameObject fxBitePrefab;
+
 
     private void Awake()
     {
@@ -54,15 +56,28 @@ public class BossMechanics : MonoBehaviour
         //update energy gfx
     }
 
+    public void BossTakeDamage(int damage)
+    {
+        BossHP -= damage;
+
+        float ratio = ((float)BossHP / (float)BossHPMax);
+        //GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio / 2, 0.2f * ratio, 0.2f * ratio, 1f);
+
+        if (BossHP <= 0)
+        {
+            GameController.Instance.BossDefeated();
+        }
+    }
 
     public void PerformBossAction()
     {
         if (BossHP <= 0) return;
-
+        float readyTimer = 0.5f;
         if (BossEnergy == 100)
         {
             FearAll();
             Invoke("TailSwipe", 1.5f);
+            readyTimer = 3.0f;
         }
         else
         {
@@ -73,24 +88,27 @@ public class BossMechanics : MonoBehaviour
         if (BossEnergy == 30 || BossEnergy == 60)
         {
             Invoke("WideClawAttack", 1.5f);
+            readyTimer = 2.0f;
         }
 
         if (BossEnergy == 50)
         {
             fxFirebreath.PlayAnimation();
             fxBreathExplode.PlayAnimation();
-            Invoke("FireBreath", 1.5f);
+            Invoke("FireBreath", 1.25f);
+            readyTimer = 2.5f;
         }
 
-        GameController.Instance.CullDeadRaidersFromAllStacks();
+        
 
-        Invoke("ActionDone", 0f);
+        Invoke("ActionDone", readyTimer);
     }
 
 
     private void ActionDone()
     {
-        Debug.Log("Boss action complete!");
+        GameController.Instance.CullDeadRaidersFromAllStacks();
+        Ready = true;
     }
 
 
@@ -119,17 +137,18 @@ public class BossMechanics : MonoBehaviour
 
             target.TakeDamage(10);
             Instantiate(fxBitePrefab, new Vector2(target.transform.position.x +0.05f, target.transform.position.y + 0.2f), Quaternion.identity);
-            //inset sound & animation
-            
+            SoundManager.Instance.PlayUniqueSound("HitMedium", 1f, 0.7f, 0.7f);
         }
         else
         {
             foreach (Raider raider in GameController.Instance.AllRaiders)
             {
-                raider.TakeDamage(8);
+                raider.TakeDamage(12);
             }
             //inset sound & animation
             fxExplosion.PlayAnimation();
+            SoundManager.Instance.PlayUniqueSound("FireballStart");
+            SoundManager.Instance.PlayUniqueSound("FireballEnd");
         }
     }
 
@@ -153,7 +172,7 @@ public class BossMechanics : MonoBehaviour
         list.Add(FrontStackZone);
         list.Add(LeftStackZone);
         list.Add(BackStackZone);
-        DamageAllInZones(list, 8);
+        DamageAllInZones(list, 9);
 
         //inset sound & animation
         fxFrontSwipe.PlayAnimation();
@@ -165,14 +184,11 @@ public class BossMechanics : MonoBehaviour
         if (FrontStackZone.UnitsInZone.Count > 0)
         {
             float units = FrontStackZone.UnitsInZone.Count;
-            int damage = Mathf.FloorToInt((40 / units) + 0.5f);
+            int damage = Mathf.FloorToInt((50 / units) + 0.5f);
             List<StackZone> list = new List<StackZone>();
             list.Add(FrontStackZone);
             DamageAllInZones(list, damage);
         }
-
-        //inset sound & animation
-        
     }
 
     private void FearAll()
@@ -181,24 +197,12 @@ public class BossMechanics : MonoBehaviour
         {
             raider.MoveToNewStackZone(GameController.Instance.StackZones[Random.Range(0, GameController.Instance.StackZones.Count)]);
         }
-
-        //inset sound and animation
         fxExplosion.PlayAnimation();
+        SoundManager.Instance.PlayUniqueSound("Roar");
     }
 
 
-    public void BossTakeDamage(int damage)
-    {
-        BossHP -= damage;
 
-        float ratio = ((float)BossHP / (float)BossHPMax);
-        //GetComponent<SpriteRenderer>().color = new Color(0.5f + ratio / 2, 0.2f * ratio, 0.2f * ratio, 1f);
-
-        if (BossHP <= 0)
-        {
-            Debug.Log("THE BOSS HAS BEEN SLAIN");
-        }
-    }
 
     public void DamageAllInZones(List<StackZone> stackZones, int damage)
     {
@@ -208,33 +212,6 @@ public class BossMechanics : MonoBehaviour
             {
                 raider.GetComponent<Raider>().TakeDamage(damage);
             }
-        }
-    }
-
-    public void StunAllInZones(List<StackZone> stackZones)
-    {
-        foreach (StackZone stackZone in stackZones)
-        {
-            foreach (GameObject raider in stackZone.UnitsInZone)
-            {
-                raider.GetComponent<Raider>().Stunned = true;
-            }
-        }
-    }
-
-    public void FearAllInZones(List<StackZone> stackZones)
-    {
-        foreach (StackZone stackZone in stackZones)
-        {
-            
-        }
-    }
-
-    public void PutFireInZones(List<StackZone> stackZones)
-    {
-        foreach (StackZone stackZone in stackZones)
-        {
-            
         }
     }
 }

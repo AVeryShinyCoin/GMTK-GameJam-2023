@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class TextDisplay : MonoBehaviour
 {
@@ -41,6 +40,29 @@ public class TextDisplay : MonoBehaviour
 
     private void Start()
     {
+        InitializePage();
+    }
+
+    public void InitializePage()
+    {
+        foreach (TextBlock textBlock in ReferenceSwappableTextBlocks)
+        {
+            Destroy(textBlock.gameObject);
+        }
+        ReferenceSwappableTextBlocks.Clear();
+
+        foreach (TextBlock textBlock in SwappableTextBlocks)
+        {
+            Destroy(textBlock.gameObject);
+        }
+        SwappableTextBlocks.Clear();
+
+        foreach (GameObject textBlock in TextBlocks)
+        {
+            Destroy(textBlock);
+        }
+        TextBlocks.Clear();
+
         swappableBG.SetActive(false);
         GenerateRandomTextBlockSelection();
 
@@ -102,6 +124,14 @@ public class TextDisplay : MonoBehaviour
             string text = "";
 
             int rrnd = Random.Range(0, 2);
+            if (i == 0)
+            {
+                rrnd = 0;
+            }
+            if (i == 1)
+            {
+                rrnd = 1;
+            }
 
             if (rrnd == 0) // Zones
             {
@@ -131,9 +161,11 @@ public class TextDisplay : MonoBehaviour
 
     void AssignSwappables()
     {
+        swappableBG.transform.parent = gameObject.transform.parent;
         swappableBG.transform.parent = gameObject.transform;
         foreach (TextBlock textBlock in SwappableTextBlocks)
         {
+            textBlock.transform.parent = gameObject.transform.parent;
             textBlock.transform.parent = gameObject.transform;
         }
     }

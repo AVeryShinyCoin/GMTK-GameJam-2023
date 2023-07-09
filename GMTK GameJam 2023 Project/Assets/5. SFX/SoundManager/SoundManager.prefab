@@ -49,7 +49,7 @@ MonoBehaviour:
   sfxMixer: {fileID: -8735190662312880172, guid: a53b58b3c8fbe5d4990b1bf078c439e4, type: 2}
   sounds:
   - name: BGMMusic
-    clip: {fileID: 8300000, guid: 905eb8ef73d617647b056536aff49e6e, type: 3}
+    clip: {fileID: 8300000, guid: f5a2f44fb2036234e92182a4e494d21e, type: 3}
     loop: 1
     volume: 1
     pitch: 1
@@ -65,5 +65,65 @@ MonoBehaviour:
     loop: 0
     volume: 1
     pitch: 0.7
+    source: {fileID: 0}
+  - name: HitLight
+    clip: {fileID: 8300000, guid: d09b837c5dca5834f86215b6493e1df3, type: 3}
+    loop: 0
+    volume: 0.8
+    pitch: 1
+    source: {fileID: 0}
+  - name: HitMedium
+    clip: {fileID: 8300000, guid: 731e54588f97a374a82aba4bba51d5bc, type: 3}
+    loop: 0
+    volume: 0.8
+    pitch: 1
+    source: {fileID: 0}
+  - name: HitHeavy
+    clip: {fileID: 8300000, guid: 08ef26265b0248940be364dfa2da0a64, type: 3}
+    loop: 0
+    volume: 0.8
+    pitch: 1
+    source: {fileID: 0}
+  - name: Heal
+    clip: {fileID: 8300000, guid: 04b1640a4c2eeec408670bc7980c62b4, type: 3}
+    loop: 0
+    volume: 0.8
+    pitch: 1
+    source: {fileID: 0}
+  - name: Error
+    clip: {fileID: 8300000, guid: 1765107c5fd7bbd4b8c71406fca067e6, type: 3}
+    loop: 0
+    volume: 0.8
+    pitch: 1
+    source: {fileID: 0}
+  - name: Roar
+    clip: {fileID: 8300000, guid: 7243cfc5a2218274488a9ce57d7d95a7, type: 3}
+    loop: 0
+    volume: 0.8
+    pitch: 1
+    source: {fileID: 0}
+  - name: FireballEnd
+    clip: {fileID: 8300000, guid: cdca7ea7a8b8b5b4e81c62fcc10b276b, type: 3}
+    loop: 0
+    volume: 0.8
+    pitch: 1
+    source: {fileID: 0}
+  - name: FireballStart
+    clip: {fileID: 8300000, guid: f043e566e1601ff4ba1d40351302e616, type: 3}
+    loop: 0
+    volume: 0.7
+    pitch: 1
+    source: {fileID: 0}
+  - name: BossDefeated
+    clip: {fileID: 8300000, guid: 146e077b9e9def2469781bd1e1e2e69c, type: 3}
+    loop: 0
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: Victory
+    clip: {fileID: 8300000, guid: 5b93c9bfd8cad994e9ba3085c7018277, type: 3}
+    loop: 0
+    volume: 1
+    pitch: 1
     source: {fileID: 0}
   masterVolume: 1

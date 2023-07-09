@@ -28,16 +28,17 @@ public class Raider : MonoBehaviour
     public bool moving;
     public Vector2 tarDestination;
     [SerializeField] GameObject fxHealPrefab;
+    public bool Ready;
 
     [Space(20)]
     public Dictionary<StackZone, int> ZoneCosts = new Dictionary<StackZone, int>();
 
-    private void Awake()
+    private void Start()
     {
         if (Role == 0)
         {
             MaxHitPoints = TankHitPoints;
-        } 
+        }
         else if (Role == 1)
         {
             MaxHitPoints = DDHitPoints;
@@ -48,11 +49,6 @@ public class Raider : MonoBehaviour
         }
 
         HitPoints = MaxHitPoints;
-    }
-
-    private void Start()
-    {
-        GameController.Instance.AllRaiders.Add(this);
     }
 
     public void PerformAction()
@@ -73,21 +69,38 @@ public class Raider : MonoBehaviour
         }
 
 
-        gfx.UseAbility();
+        
+        Ready = true;
 
         if (Role == 0)
         {
-            BossMechanics.Instance.BossTakeDamage(TankDamageDealt);
-            PlayAbilitySound("HitMedium");
+            if (CurrentStackZone == GameController.Instance.FrontStackZone ||
+                CurrentStackZone == GameController.Instance.BackStackZone ||
+                CurrentStackZone == GameController.Instance.LeftStackZone ||
+                CurrentStackZone == GameController.Instance.RightStackZone)
+            {
+                gfx.UseAbility();
+                BossMechanics.Instance.BossTakeDamage(TankDamageDealt);
+                PlayAbilitySound("HitMedium");
+            }
             // Add tank bool;
         }
         else if (Role == 1)
         {
-            BossMechanics.Instance.BossTakeDamage(DDamageDealt);
-            PlayAbilitySound("HitLight");
+            if (CurrentStackZone == GameController.Instance.FrontStackZone ||
+                CurrentStackZone == GameController.Instance.BackStackZone ||
+                CurrentStackZone == GameController.Instance.LeftStackZone ||
+                CurrentStackZone == GameController.Instance.RightStackZone)
+            {
+                gfx.UseAbility();
+                BossMechanics.Instance.BossTakeDamage(DDamageDealt);
+                PlayAbilitySound("HitLight");
+            }
+            
         }
         else if (Role == 2)
         {
+            gfx.UseAbility();
             PlayAbilitySound("Heal");
 
             List<Raider> woundedRaiders = new List<Raider>();
@@ -220,6 +233,7 @@ public class Raider : MonoBehaviour
             if (Vector2.Distance(transform.position, tarDestination) <= 0.1)
             {
                 moving = false;
+                Ready = true;
                 gfx.ArrivedAtDestination();
             }
         }
@@ -238,6 +252,7 @@ public class Raider : MonoBehaviour
             GameController.Instance.KilledRaiders.Add(this.gameObject);
             gfx.Die();
             if (moving) moving = false;
+            GameController.Instance.RaidWiped();
         }
     }
 

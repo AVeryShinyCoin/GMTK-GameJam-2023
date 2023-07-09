@@ -80,24 +80,26 @@ public class MenuManager : MonoBehaviour
 
     void Start()
     {
-        titlePlay.action = () => TitleStartGame();
-        titleSettings.action = () => TitleEnterSettings();
-        titleQuit.action = () => TitleQuit();
-        titleCredits.action = () => TitleCredits();
-        settingsViewControls.action = () => SettingsViewControls();
+        //titlePlay.action = () => TitleStartGame();
+        //titleSettings.action = () => TitleEnterSettings();
+        //titleQuit.action = () => TitleQuit();
+        //titleCredits.action = () => TitleCredits();
+        //settingsViewControls.action = () => SettingsViewControls();
         settingsFullscreen.action = () => SettingsFullscreen();
         settingsBack.action = () => SettingsBack();
         pausedResume.action = () => PausedResume();
         pausedSettings.action = () => PausedSettings();
         pausedQuit.action = () => PausedQuit();
-        screenControlsBack.action = () => ScreenControlsBack();
-        screenCreditsBack.action = () => ScreenCreditsBack();
+        //screenControlsBack.action = () => ScreenControlsBack();
+        //screenCreditsBack.action = () => ScreenCreditsBack();
     }
 
     public void TitleStartGame()
     {
+        Debug.Log("Succes");
         titleMenu.SetActive(false);
-        SceneLoader.Instance.LoadScene(1);
+        SceneLoader.Instance.LoadScene(0);
+        //UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 
     public void TitleEnterSettings()
@@ -127,20 +129,13 @@ public class MenuManager : MonoBehaviour
 
     public void SettingsFullscreen()
     {
-
+        Screen.fullScreen = !Screen.fullScreen;
     }
 
     public void SettingsBack()
     {
         settingsMenu.SetActive(false);
-
-        if (SceneManager.GetActiveScene().buildIndex == 0)
-        {
-            titleMenu.SetActive(true);
-        } else
-        {
-            pauseMenu.SetActive(true);
-        }
+        pauseMenu.SetActive(true);
     }
 
     public void PausedResume()
@@ -159,9 +154,7 @@ public class MenuManager : MonoBehaviour
 
     public void PausedQuit()
     {
-        Time.timeScale = 1;
-        pauseMenu.SetActive(false);
-        SceneLoader.Instance.LoadScene(0);
+        Application.Quit();
     }
 
     public void ScreenControlsBack()
@@ -180,7 +173,7 @@ public class MenuManager : MonoBehaviour
     private void Update()
     {
         // Pause game
-        if (input.PlayerController.Escape.WasPressedThisFrame() && SceneManager.GetActiveScene().buildIndex != 0 && !SceneLoader.Instance.StartedTransition)
+        if (input.PlayerController.Escape.WasPressedThisFrame())
         {
             pauseMenu.SetActive(true);
             Time.timeScale = 0;

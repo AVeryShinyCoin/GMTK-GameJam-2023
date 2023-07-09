@@ -47,21 +47,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Role: 0
   DDHitPoints: 10
-  TankHitPoints: 40
+  TankHitPoints: 36
   HealerHitPoints: 8
-  DDamageDealt: 10
+  DDamageDealt: 12
   TankDamageDealt: 2
-  HealerHealthRestore: 16
+  HealerHealthRestore: 10
   MaxHitPoints: 0
   HitPoints: 0
   CurrentStackZone: {fileID: 0}
   LowestCostStackZone: {fileID: 0}
   Stunned: 0
-  speed: 2
+  speed: 3
   gfx: {fileID: 9056921133575663117}
   moving: 0
   tarDestination: {x: 0, y: 0}
   fxHealPrefab: {fileID: 3577693421676635527, guid: c6aa76b52a1e5f648bb14c93871b03b0, type: 3}
+  Ready: 0
 --- !u!1 &2474746065259813756
 GameObject:
   m_ObjectHideFlags: 0

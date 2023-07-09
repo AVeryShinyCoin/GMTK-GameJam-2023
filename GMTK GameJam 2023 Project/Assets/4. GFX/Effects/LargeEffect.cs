@@ -5,6 +5,7 @@ using UnityEngine;
 public class LargeEffect : MonoBehaviour
 {
     Animator animator;
+    [SerializeField] string sound;
     
 
     private void Awake()
@@ -17,6 +18,14 @@ public class LargeEffect : MonoBehaviour
     {
         gameObject.SetActive(true);
         animator.Play("Ability");
+    }
+
+    public void PlaySound()
+    {
+        Debug.Log(sound);
+        if (sound == null) return;
+
+        SoundManager.Instance.PlayUniqueSound(sound);
     }
 
     public void StopAnimation()
