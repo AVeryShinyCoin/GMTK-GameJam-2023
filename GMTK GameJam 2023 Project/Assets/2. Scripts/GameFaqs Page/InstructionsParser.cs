@@ -9,6 +9,8 @@ public class InstructionsParser : MonoBehaviour
 
     public void ParseInstructions(List<TextBlock> rawTextBlocks)
     {
+        rawConditions.Clear();
+
         List<TextBlock> currConditionList = new List<TextBlock>();      
 
         foreach (TextBlock textBlock in rawTextBlocks)        

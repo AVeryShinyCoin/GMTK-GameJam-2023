@@ -73,7 +73,12 @@ public class GameController : MonoBehaviour
         raidProgessText.SetActive(true);
         TextDisplay.Instance.CookTextBlocks();
 
-        Debug.Log("start");
+        Debug.Log("BasicConditions: " + BasicConditions.Count);
+        Debug.Log("EnergyConditions: " + EnergyConditions.Count);
+        Debug.Log("HealthConditions: " + HealthConditions.Count);
+
+
+
         Vector2 spawnPoint = new Vector2(0, -4.5f);
 
         for (int i = 0; i < 2; i++)
@@ -133,10 +138,15 @@ public class GameController : MonoBehaviour
         {
             if (!raider.Ready) return;
         }
+        CullDeadRaidersFromAllStacks();
+
+        if (AllRaiders.Count == 0)
+        {
+            RaidWiped();
+            return;
+        }
 
         BossMechanics.Instance.ChangeBossEnergy(10);
-        Debug.Log("New turn! Energy: " + BossMechanics.Instance.BossEnergy +
-            " Health: " + (float)((float)BossMechanics.Instance.BossHP / (float)BossMechanics.Instance.BossHPMax) * 100);
 
         foreach (Raider raider in AllRaiders)
         {
@@ -174,12 +184,6 @@ public class GameController : MonoBehaviour
         {
             NewTurn();
         }
-
-        if (input.PlayerController.Enter.WasPressedThisFrame())
-        {
-            StartRaid();
-        }
-
     }
 
     public void BossDefeated()
@@ -196,7 +200,6 @@ public class GameController : MonoBehaviour
         ResetWorld();
         middleFrame.SetActive(true);
         middleFrame.GetComponent<UICenterFrameController>().ShowDefeatScreen();
-        CameraManager.Instance.PanToDeskScreen();
     }
 
     public void RaidWiped()
@@ -214,13 +217,15 @@ public class GameController : MonoBehaviour
         ResetWorld();
         middleFrame.SetActive(true);
         middleFrame.GetComponent<UICenterFrameController>().ShowVictoryScreen();
-        CameraManager.Instance.PanToDeskScreen();
     }
 
 
 
     void ResetWorld()
     {
+        BasicConditions.Clear();
+        EnergyConditions.Clear();
+        HealthConditions.Clear();
         raidProgessText.SetActive(false);
         bossFrame.SetActive(false);
 
@@ -229,11 +234,13 @@ public class GameController : MonoBehaviour
             Destroy(raider.gameObject);
         }
         AllRaiders.Clear();
+
         foreach (GameObject raider in KilledRaiders)
         {
             Destroy(raider.gameObject);
         }
         KilledRaiders.Clear();
+
         BossMechanics.Instance.BossHP = BossMechanics.Instance.BossHPMax;
         BossMechanics.Instance.BossEnergy = 0;
         foreach (StackZone stackZone in StackZones)

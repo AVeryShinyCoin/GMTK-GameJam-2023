@@ -22,7 +22,6 @@ public class LargeEffect : MonoBehaviour
 
     public void PlaySound()
     {
-        Debug.Log(sound);
         if (sound == null) return;
 
         SoundManager.Instance.PlayUniqueSound(sound);
