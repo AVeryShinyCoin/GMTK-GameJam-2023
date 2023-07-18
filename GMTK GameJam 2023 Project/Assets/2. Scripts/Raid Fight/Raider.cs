@@ -111,7 +111,7 @@ public class Raider : MonoBehaviour
                 if (raider.HitPoints < raider.MaxHitPoints)
                 {
                     woundedRaiders.Add(raider);
-                    if (raider.Role == 1) woundedTanks.Add(raider);
+                    if (raider.Role == 0) woundedTanks.Add(raider);
                 }
             }
 

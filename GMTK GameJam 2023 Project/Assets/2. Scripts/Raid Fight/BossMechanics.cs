@@ -157,8 +157,10 @@ public class BossMechanics : MonoBehaviour
 
         if (BackStackZone.UnitsInZone.Count > 0)
         {
-            List<StackZone> list = new List<StackZone>();
-            list.Add(BackStackZone);
+            List<StackZone> list = new List<StackZone>()
+            {
+                BackStackZone
+            };
             DamageAllInZones(list, 8);
 
             //inset sound & animation
@@ -168,10 +170,12 @@ public class BossMechanics : MonoBehaviour
 
     private void WideClawAttack()
     {
-        List<StackZone> list = new List<StackZone>();
-        list.Add(FrontStackZone);
-        list.Add(LeftStackZone);
-        list.Add(BackStackZone);
+        List<StackZone> list = new List<StackZone>()
+        {
+            FrontStackZone,
+            LeftStackZone,
+            RightStackZone
+        };
         DamageAllInZones(list, 9);
 
         //inset sound & animation
@@ -185,8 +189,10 @@ public class BossMechanics : MonoBehaviour
         {
             float units = FrontStackZone.UnitsInZone.Count;
             int damage = Mathf.FloorToInt((50 / units) + 0.5f);
-            List<StackZone> list = new List<StackZone>();
-            list.Add(FrontStackZone);
+            List<StackZone> list = new List<StackZone>()
+            {
+                FrontStackZone
+            };
             DamageAllInZones(list, damage);
         }
     }
@@ -195,7 +201,14 @@ public class BossMechanics : MonoBehaviour
     {
         foreach (Raider raider in GameController.Instance.AllRaiders)
         {
-            raider.MoveToNewStackZone(GameController.Instance.StackZones[Random.Range(0, GameController.Instance.StackZones.Count)]);
+            int rnd;
+            do
+            {
+                rnd = Random.Range(0, GameController.Instance.StackZones.Count);
+            }
+            while (rnd != GameController.Instance.StackZones.IndexOf(raider.CurrentStackZone));
+            
+            raider.MoveToNewStackZone(GameController.Instance.StackZones[rnd]);
         }
         fxExplosion.PlayAnimation();
         SoundManager.Instance.PlayUniqueSound("Roar");

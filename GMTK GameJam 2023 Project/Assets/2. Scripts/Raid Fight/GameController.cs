@@ -65,14 +65,13 @@ public class GameController : MonoBehaviour
         SoundManager.Instance.PlaySound("BGMMusic", 1f);
         if (Tutorial)
         {
-            BossMechanics.Instance.BossHP = 300;
+            BossMechanics.Instance.BossHP = 10;
+            raidProgessText.SetActive(true);
         }
 
         bossFrame.SetActive(true);
-        Tutorial = false;
-        raidProgessText.SetActive(true);
+        
         TextDisplay.Instance.CookTextBlocks();
-
         Debug.Log("BasicConditions: " + BasicConditions.Count);
         Debug.Log("EnergyConditions: " + EnergyConditions.Count);
         Debug.Log("HealthConditions: " + HealthConditions.Count);
@@ -198,8 +197,17 @@ public class GameController : MonoBehaviour
     void TransitionDefeat()
     {
         ResetWorld();
-        middleFrame.SetActive(true);
         middleFrame.GetComponent<UICenterFrameController>().ShowDefeatScreen();
+        middleFrame.SetActive(true);
+        if (Tutorial)
+        {
+            Tutorial = false;
+            CameraManager.Instance.PanToDeskScreen();
+        }
+        else
+        {
+            
+        }
     }
 
     public void RaidWiped()

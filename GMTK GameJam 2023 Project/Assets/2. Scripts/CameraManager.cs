@@ -49,6 +49,7 @@ public class CameraManager : MonoBehaviour
 
     public void PanToRaidScreen()
     {
+        Debug.Log("triggered");
         OnDesk = false;
         target = new Vector3(0f, 0f, -10f);
         origin = transform.position;
@@ -75,6 +76,7 @@ public class CameraManager : MonoBehaviour
         sizeDifference = targetSize - size;
     }
 
+
     private void FixedUpdate()
     {
         if (moving)
@@ -93,6 +95,7 @@ public class CameraManager : MonoBehaviour
             {
                 moving = false;
                 mainCamera.transform.position = target;
+                Camera.main.orthographicSize = targetSize;
             }
         }
     }
